@@ -1,7 +1,17 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import { ApolloServer } from 'apollo-server-express';
+import { ApolloServer, SchemaDirectiveVisitor } from 'apollo-server-express';
 import { GraphQLDateTime } from 'graphql-iso-date';
+
+
+class UselessDirective extends SchemaDirectiveVisitor {
+    visitObject(type) {
+    }
+
+    visitFieldDefinition(field, details) {
+    }
+}
+
 
 const typeDefs = `
     scalar GraphQLDateTime
@@ -19,6 +29,9 @@ const typeDefs = `
 
 const server = new ApolloServer({
     typeDefs,
+    schemaDirectives: {
+        useless: UselessDirective
+    },
     resolvers: {
         GraphQLDateTime,
         Query: {
@@ -31,6 +44,6 @@ const server = new ApolloServer({
 const app = express().use(bodyParser());
 server.applyMiddleware({ app, cors: false });
 
-app.listen(15030, () => {
-    console.log(`GraphQL API listening on port 15030...`)
+app.listen(4000, () => {
+    console.log(`GraphQL API listening on port 4000...`)
 });
